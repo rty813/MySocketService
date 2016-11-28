@@ -1,5 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 
@@ -15,11 +17,19 @@ public class ChatSocket extends Thread {
     @Override
     public void run() {
         try {
+            int count = 0;
             OutputStream os = socket.getOutputStream();
-            while (true) {
-                os.write("hello world\n".getBytes("UTF-8"));
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            while (count <= 20) {
+                count ++;
+                bw.write("hello world"+count);
+                bw.flush();
                 sleep(1000);
             }
+            bw.close();
+            osw.close();
+            os.close();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
